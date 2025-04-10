@@ -1,6 +1,7 @@
-package com.example.demo;
+package com.example.demo.annotations;
+
+import java.util.List;
 
 public interface MyService {
-    @Profiling
-    void demo();
+    Employee demo(String name, String method, List<Employee> employee);
 }

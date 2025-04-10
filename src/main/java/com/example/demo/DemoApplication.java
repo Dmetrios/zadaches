@@ -1,55 +1,55 @@
 package com.example.demo;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-//@SpringBootApplication
+@SpringBootApplication
 public class DemoApplication {
 
     public static void main(String[] args) {
-//        SpringApplication.run(DemoApplication.class, args);
+        SpringApplication.run(DemoApplication.class, args);
 
-        TreeNode root = new TreeNode(1);
-        TreeNode node1 = new TreeNode(2);
-        TreeNode node2 = new TreeNode(2);
-        TreeNode node3 = new TreeNode(3);
-        TreeNode node4 = new TreeNode(3);
-        TreeNode node5 = new TreeNode(3);
-        TreeNode node6 = new TreeNode(3);
-        TreeNode node7 = new TreeNode(4);
-        TreeNode node8 = new TreeNode(4);
-        TreeNode node9 = new TreeNode(4);
-        TreeNode node10 = new TreeNode(4);
-        TreeNode node11 = new TreeNode(4);
-        TreeNode node12 = new TreeNode(4);
-        TreeNode node13 = new TreeNode(5);
-        TreeNode node14 = new TreeNode(5);
+//        System.out.println(Jwts.builder()
+//                .setSubject("287756df-2c4f-4cd1-a031-213bfc3aae73")
+//                .signWith(Keys.hmacShaKeyFor(
+//                        Decoders.BASE64.decode("404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970")), SignatureAlgorithm.HS256)
+//                .compact());
+    }
+    private static int majorityElement(int[] nums) {
+        Map<Integer, Integer> map = new HashMap<>();
 
-        root.left = node1;
-        root.right = node2;
-
-        node1.left = node3;
-        node1.right = node4;
-
-        node2.left = node5;
-        node2.right = node6;
-
-        node3.left = node7;
-        node3.right = node8;
-
-        node4.left = node9;
-        node4.right = node10;
-
-        node5.left = node11;
-        node5.right = node12;
-
-        node7.left = node13;
-        node7.right = node14;
-
-        System.out.println(isBalanced(root));
+        for (int num : nums) {
+            if (map.containsKey(num)) {
+                map.put(num, map.get(num) + 1);
+            }
+            else {
+                map.put(num, 1);
+            }
+        }
+        return map.entrySet().stream()
+                .max(Map.Entry.comparingByValue())
+                .map(Map.Entry::getKey)
+                .orElse(0);
+    }
+    public static int findClosestToTen(int[] array) {
+        int result = 0;
+        int pro = Integer.MAX_VALUE;
+        for (int i : array) {
+            if (Math.abs(10 - i) < pro) {
+                pro = Math.abs(10 - i);
+                result = i;
+            }
+        }
+        return result;
     }
 
 
@@ -144,6 +144,53 @@ public class DemoApplication {
 
         if (sizeSet1 != sizeSet2) {
             return false;
+        }
+        return true;
+    }
+
+    private static boolean canConstruct(String ransomNote, String magazine) {
+        Map<Character, Integer> map1 = magazine
+                .chars()
+                .mapToObj(c -> (char) c)
+                .collect(Collectors.groupingBy(c -> c, Collectors.collectingAndThen(Collectors.counting(), Long::intValue)));
+
+        System.out.println(map1);
+
+        Map<Character, Integer> map2 = ransomNote
+                .chars()
+                .mapToObj(c -> (char) c)
+                .collect(Collectors.groupingBy(c -> c, Collectors.collectingAndThen(Collectors.counting(), Long::intValue)));
+        System.out.println(map2);
+
+
+        System.out.println(ransomNote);
+
+        for(char c : ransomNote.toCharArray()) {
+            Integer i = map2.get(c);
+            Integer j = map1.get(c);
+            if (i == null || j == null) {
+                return false;
+            }
+            if(i > j)
+            {
+                return false;
+            }
+
+        }
+        return true;
+    }
+
+    private static boolean can(String ransomNote, String magazine) {
+        int[] chars = new int[128];
+
+        for(char c : ransomNote.toCharArray()) {
+            if(magazine.indexOf(c, chars[c]) != -1) {
+                chars[c] = magazine.indexOf(c, chars[c])+1;
+            }
+            else {
+                return false;
+            }
+
         }
         return true;
     }
